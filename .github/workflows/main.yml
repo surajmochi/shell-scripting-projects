@@ -1,0 +1,34 @@
+name: List Users with Read Access
+
+on:
+  workflow_dispatch: # Allows manual triggering of the workflow
+    inputs:
+      repo_owner:
+        description: 'Repository owner username'
+        required: true
+      repo_name:
+        description: 'Repository name'
+        required: true
+
+jobs:
+  list-users:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up environment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        USERNAME: ${{ secrets.GITHUB_USERNAME }}
+        TOKEN: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
+      run: |
+        echo "Setting up environment variables"
+        export username=$USERNAME
+        export token=$TOKEN
+
+    - name: Run shell script
+      run: |
+        chmod +x ./your-script.sh
+        ./your-script.sh ${{ github.event.inputs.repo_owner }} ${{ github.event.inputs.repo_name }}
